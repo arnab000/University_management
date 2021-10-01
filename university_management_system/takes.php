@@ -18,7 +18,7 @@ if (isset($_POST['submit'])) {
     }
     if($main_result)
     {
-        header("location:admin.php");
+        header("location:takes.php");
     }
     
    

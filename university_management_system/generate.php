@@ -1,6 +1,3 @@
-<?php
-include 'connect.php';
-?>
 
 <!doctype html>
 <html lang="en">
@@ -17,22 +14,34 @@ include 'connect.php';
 </head>
 
 <body>
-    <div class="container my-5">
-        <button class="btn btn-primary">
-            <a href="student_enroll.php" class="text-light">
-                Add new student 
-            </a>
+<?php
+include "connect.php";
+if(isset($_GET['generateid']))
+{
+    $id= $_GET['generateid'];
+    $sql= "select Student.Id,Student.Name,sum(Course.credit) as credit
+    from Student natural join Takes,Course
+    where Course.id=Takes.Course_id and Student.Id=$id";
+    $result= mysqli_query($con,$sql);
+    if($result)
+    {
+        $row= mysqli_fetch_assoc($result);
+        echo '<div class="alert alert-success" role="alert">
+        <h4 class="alert-heading"> Roll : '.$row['Id'].' </h4>
+        <p>Name: '.$row['Name'].'</p>
+        <hr>
+        <p class="mb-0">Amount of Credit taken: '.$row['credit'].'</p>
+      </div>';
+        
+    }else
+    {
+        die(mysqli_error($con));
+    }
 
-        </button>
-        <button class="btn btn-primary">
-            <a href="course.php" class="text-light">
-                Add new course
-            </a>
+}
 
-        </button>
-
-    </div>
-    <div>
+?> 
+<div>
 
 
 <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80" class="rounded mx-auto d-block" >

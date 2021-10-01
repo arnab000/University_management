@@ -58,6 +58,11 @@ include 'connect.php';
                   delete
                 </a>
             </button>
+            <button class="btn btn-success">
+                <a href="generate.php?generateid='.$id.'" class="text-light">
+                  Generate Credit Info
+                </a>
+            </button>
         </td>
             </tr>';
                     }
