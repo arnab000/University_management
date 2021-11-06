@@ -2,26 +2,36 @@
 include 'connect.php';
 if (isset($_POST['submit'])) {
     $id = $_POST['roll'];
-    $main_result=true;
-    if(!empty($_POST['subject'])){
-        foreach($_POST['subject'] as $value){
-            $sql="insert into Takes (Id,Course_id)
+    $roll_found = true;
+    $sql = "select Id from Student where Id=($id)";
+    $result = mysqli_query($con, $sql);
+    if ($result) {
+        $row = mysqli_fetch_assoc($result);
+        if (!$row) {
+            
+            echo '
+            <div class="alert alert-danger" role="alert">
+              No student with this ID has been found
+            </div>';
+            $roll_found = false;
+        }
+    }
+    $main_result = $roll_found;
+    if (!empty($_POST['subject']) and $roll_found) {
+        foreach ($_POST['subject'] as $value) {
+            $sql = "insert into Takes (Id,Course_id)
             values($id,$value)";
             $result = mysqli_query($con, $sql);
             if ($result) {
-                $main_result =$main_result and $result;
+                $main_result = $main_result and $result;
             } else {
                 die(mysqli_error($con));
             }
         }
-
     }
-    if($main_result)
-    {
+    if ($main_result) {
         header("location:takes.php");
     }
-    
-   
 }
 
 ?>
@@ -50,27 +60,24 @@ if (isset($_POST['submit'])) {
                 <input type="text" class="form-control" placeholder="Enter student's id" name="roll">
             </div>
             <?php
-            $sql="select * from Course";
-            $result=mysqli_query($con,$sql);
-            if($result)
-            {
-                while($row= mysqli_fetch_assoc($result))
-                {
-                    $couse_id=$row['id'];
-                    $couse_name=$row['name'];
-                    $course_credit=$row['credit'];
+            $sql = "select * from Course";
+            $result = mysqli_query($con, $sql);
+            if ($result) {
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $couse_id = $row['id'];
+                    $couse_name = $row['name'];
+                    $course_credit = $row['credit'];
                     echo '<div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="subject[]" value="'.$couse_id.'" >
+                    <input class="form-check-input" type="checkbox" name="subject[]" value="' . $couse_id . '" >
                     <label class="form-check-label" >
-                        '.$couse_id.' '.$couse_name.' 
+                        ' . $couse_id . ' ' . $couse_name . ' 
                     </label>
                 </div>';
-                    
                 }
             }
             ?>
-           
-            
+
+
 
             <button type="submit" class="btn btn-primary" name='submit'>Submit</button>
         </form>
